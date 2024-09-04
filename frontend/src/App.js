@@ -4,6 +4,7 @@ import React from 'react';
 import Register from './components/Register';
 import Login from './components/Login';
 import UserManagement from './components/UserManagement';
+import Palvelu from './components/Palvelut';
 import './App.css';
 //import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'; //Tämä ei toimi
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; //Näin piti muuttaa että toimi<zx

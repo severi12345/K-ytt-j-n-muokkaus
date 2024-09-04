@@ -62,9 +62,9 @@ function Register() {
             <h2>Rekisteröinti</h2>
 
             {/* Näytetään virheilmoitus, jos rekisteröinti epäonnistuu */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {/*{error && <p style={{ color: 'red' }}>{error}</p>}*/}
             {/* Näytetään onnistumisviesti, jos rekisteröinti onnistuu */}
-            {success && <p style={{ color: 'green' }}>Rekisteröinti onnistui!</p>}
+            {/*{success && <p style={{ color: 'green' }}>Rekisteröinti onnistui!</p>}*/}
 
             {/* Lomakkeen lähetys kutsuu handleSubmit-funktiota */}
             <form onSubmit={handleSubmit}>
@@ -74,7 +74,7 @@ function Register() {
                     <input
                         type="text"
                         name="username"
-                        value={user.username}
+                        defaultValue={user.username}
                         onChange={handleChange}
                         required  // Pakollinen kenttä
                     />
@@ -86,7 +86,7 @@ function Register() {
                     <input
                         type="password"
                         name="password"
-                        value={user.password}
+                        defaultValue={user.password}
                         onChange={handleChange}
                         required  // Pakollinen kenttä
                     />
@@ -97,7 +97,7 @@ function Register() {
                     {/* Tekstialue, joka päivittää bio-tilan */}
                     <textarea
                         name="bio"
-                        value={user.bio}
+                        defaultValue={user.bio}
                         onChange={handleChange}
                     />
                 </label>

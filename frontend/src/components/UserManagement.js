@@ -9,13 +9,13 @@ function UserManagement() {
     const [editingUser, setEditingUser] = useState(null);
 
 // useEffect hook suorittaa koodin, kun komponentti ladataan
-    useEffect(() => {
-        // Alustava käyttäjädata (voisi olla API-kutsu lopullisessa sovelluksessa)
-        setUsers([
-            { username: 'Jouni React', bio: 'Tämä on Jounin henkilökohtainen kuvaus (bio).'}, 
-            { username: 'Jaana React', bio: 'Tämä on Jaanan henkilökohtainen kuvaus (bio).' }
-        ]);
-    }, []);
+    useEffect(() => {     
+            // Hakee käyttäjät backendistä
+        fetch('http://localhost:5000/api/users')
+            .then(response => response.json())
+            .then(data => setUsers(data));
+    
+}, []);
 
     // handleChange-funktio päivittää tilan, kun käyttäjä muuttaa lomakkeen kenttää
     const handleChange = (e) => {
@@ -28,26 +28,46 @@ function UserManagement() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (editingUser) {
-            // Jos ollaan muokkaustilassa, päivitetään olemassa oleva käyttäjä 
-            setUsers(users.map(user => (user.username === editingUser.username ? newUser : user)));
-            setEditingUser(null);
+            // Päivittää käyttäjän backendissä
+            fetch(`http://localhost:5000/api/users/${editingUser.username}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            })
+                .then(response => response.json())
+                .then(updatedUser => {
+                    setUsers(users.map(user => (user.username === updatedUser.username ? updatedUser : user)));
+                    setEditingUser(null);
+                    setNewUser({ username: '', bio: '' });
+                });
         } else {
-            // Muussa tapauksessa lisätään uusi käyttäjä
-            setUsers([...users, newUser]);
+            // Lisää uuden käyttäjän backendissä
+            fetch('http://localhost:5000/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            })
+                .then(response => response.json())
+                .then(user => setUsers([...users, user]));
         }
-        // Tyhjennetään lomake
-        setNewUser({ username: '', bio: '' });
-    };
+    }
 
-// handleEdit-funktio asettaa käyttäjän muokkaustilaan
+    // handleEdit-funktio asettaa käyttäjän muokkaustilaan
     const handleEdit = (user) => {
         setEditingUser(user);
         setNewUser({ username: user.username, bio: user.bio });
     };
 
     // handleDelete-funktio poistaa käyttäjän listasta
-    const handleDelete = (username) => {
-        setUsers(users.filter(user => user.username !== username));
+	const handleDelete = (username) => {
+        fetch(`http://localhost:5000/api/users/${username}`, {
+            method: 'DELETE'
+        })
+            .then(() => setUsers(users.filter(user => user.username !== username)));
     };
 
     // Komponentin renderöinti
@@ -99,4 +119,3 @@ Bio:
 }
 
 export default UserManagement;
-
